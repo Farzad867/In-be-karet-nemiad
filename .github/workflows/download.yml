@@ -1,18 +1,35 @@
-name: Get My Driver
+name: Get My Driver 580
 on:
   workflow_dispatch:
 
 jobs:
-  download_job:
+  split_and_upload:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Download
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Download Driver
         run: |
+          # دانلود درایور با لینک مستقیم تو
           curl -L -o nvidia-driver.run https://us.download.nvidia.com/XFree86/Linux-x86_64/580.159.03/NVIDIA-Linux-x86_64-580.159.03.run
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v1.0
-          files: nvidia-driver.run
+          
+          # ساخت کد سلامت فایل
+          sha256sum nvidia-driver.run > checksum.txt
+          echo "File downloaded and checksum created."
+
+      - name: Split File (90MB parts)
+        run: |
+          mkdir -p driver_parts
+          # تقسیم فایل به قطعات ۹۰ مگابایتی با پسوند عددی
+          split -b 90M -d nvidia-driver.run ./driver_parts/nv_part.
+
+      - name: Commit and Push to Project
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add driver_parts/* checksum.txt
+          git commit -m "Add split driver 580.159.03 and checksum"
+          git push -f
