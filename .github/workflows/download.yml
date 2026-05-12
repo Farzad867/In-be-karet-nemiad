@@ -14,11 +14,7 @@ jobs:
       - name: Download Driver
         run: |
           # دانلود درایور با لینک مستقیم تو
-          curl -L -o nvidia-driver.run https://us.download.nvidia.com/XFree86/Linux-x86_64/580.159.03/NVIDIA-Linux-x86_64-580.159.03.run
-          
-          # ساخت کد سلامت فایل
-          sha256sum nvidia-driver.run > checksum.txt
-          echo "File downloaded and checksum created."
+          curl -L -o  nvidia-driver.run https://github.com/rust-lang/rust-analyzer/releases/download/2026-05-11/rust-analyzer-linux-x64.vsix
 
       - name: Split File (90MB parts)
         run: |
