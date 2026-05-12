@@ -1,0 +1,18 @@
+name: Get My Driver
+on:
+  workflow_dispatch:
+
+jobs:
+  download_job:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download
+        run: |
+          curl -L -o nvidia-driver.run https://us.download.nvidia.com/XFree86/Linux-x86_64/580.159.03/NVIDIA-Linux-x86_64-580.159.03.run
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0
+          files: nvidia-driver.run
